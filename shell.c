@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <limits.h>
+#include <dirent.h>
 
 char *param[5];
 char *func;
@@ -29,13 +30,68 @@ void getCommand(){
 	
 }
 
+void clearStdin()
+{
+    // keep reading 1 more char as long as the end of the stream, indicated by the newline char has NOT been reached
+    while (true)
+    {
+        int c = getc(stdin);
+        if (c == EOF || c == '\n')
+        {
+            break;
+        }
+    }
+}
+
+int listDir(){
+	DIR *folder;
+	struct dirent *entry;
+	int files=0;
+
+	folder = opendir(param[0]);
+	if(folder==NULL){
+		puts("Unable to read directory!");
+		return(1);
+	}
+	while((entry=readdir(folder))){
+		files++;
+		printf("File %3d: %s\n", files, entry->d_name);
+	}
+	closedir(folder);
+	return(0);
+
+}
+
+int pauseShell(){
+	printf("\nShell is paused until <Enter> is pressed!\n");
+	while(1){
+		clearStdin();
+		int c = getc(stdin);
+		if(c=='\n'){
+			break;
+		}
+	}
+	return 0;
+}
+
 int main(int argc, char *argv[]){
+	char enter = 0;
 	getCommand();
 	while(strcmp(func, "quit") != 0){
 	
 		if(strcmp(func, "cd") == 0){
 			chdir(param[0]);
 			
+		}
+		if(strcmp(func, "dir")==0){
+			listDir(param[0]);
+		}
+		if(strcmp(func,"clr")==0){
+			system("clear");
+		}
+		if(strcmp(func,"pause")==0){
+			fflush(stdin);
+			pauseShell();
 		}
 	getCommand();
 	}
