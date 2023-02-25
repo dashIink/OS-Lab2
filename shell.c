@@ -5,10 +5,12 @@
 #include <unistd.h>
 #include <limits.h>
 #include <dirent.h>
+#include <sys/wait.h>
 
 char *param[5];
 char *func;
 char allParam[256];
+int status;
 
 extern char **environ;
 
@@ -77,7 +79,7 @@ int listDir(){
 
 }
 
-bool searchForFile(){
+bool searchForFile(char nof[]){
 	DIR *d;
 	struct dirent *dir;
 	d = opendir(".");
@@ -89,7 +91,7 @@ bool searchForFile(){
 	    	}
 	    	closedir(d);
 	}
-	return(0);
+	return false;
 }
 
 int pauseShell(){
@@ -135,7 +137,44 @@ int main(int argc, char *argv[]){
             		}
         	}
 		else{//if the input is not recognized, search for a file by the name
-			
+			if (searchForFile(func)){
+			char executeFile[] = "./";
+			if(param[0] != NULL){
+				if (*param[0] == '&'){
+					pid_t pid = fork();
+					if(pid == 0){
+						strcat(executeFile, func);
+						char *args[]={executeFile,NULL};
+						execvp(args[0],args);
+					}	
+				}
+				else{
+					pid_t pid = fork();
+					if(pid == 0){
+						strcat(executeFile, func);
+						char *args[]={executeFile,NULL};
+						execvp(args[0],args);
+					}
+					else{
+						waitpid(pid, &status, 0);
+					}
+				}
+			}
+			else{
+				pid_t pid = fork();
+				if(pid == 0){
+					strcat(executeFile, func);
+					char *args[]={executeFile,NULL};
+					execvp(args[0],args);
+				}
+				else{
+					waitpid(pid, &status, 0);
+				}
+			}
+			}
+			else{
+				printf("Unable to find file!\n");
+			}
 		}
 	getCommand();
 	}
