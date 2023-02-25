@@ -10,6 +10,8 @@ char *param[5];
 char *func;
 char allParam[256];
 
+extern char **environ;
+
 void getCommand(){
 	char input[256];
 	char cwd[1000];
@@ -71,9 +73,23 @@ int listDir(){
 		files++;
 		printf("File %3d: %s\n", files, entry->d_name);
 	}
-	closedir(folder);
 	return(0);
 
+}
+
+bool searchForFile(){
+	DIR *d;
+	struct dirent *dir;
+	d = opendir(".");
+	if (d) {
+		while ((dir = readdir(d)) != NULL) {
+			if (strcmp(dir->d_name, nof) == 0){
+				return true;
+			}
+	    	}
+	    	closedir(d);
+	}
+	return(0);
 }
 
 int pauseShell(){
@@ -109,6 +125,16 @@ int main(int argc, char *argv[]){
 		}
 		if(strcmp(func, "echo")==0){
 			removeChar(allParam, 5, strlen(allParam));
+			
+		}
+		if(strcmp(func, "environ") == 0){
+            		// loop over the environ variable and print each environment variable
+            		for (char **env = environ; *env != NULL; env++)
+            		{
+                		printf("%s\n", *env);
+            		}
+        	}
+		else{//if the input is not recognized, search for a file by the name
 			
 		}
 	getCommand();
