@@ -8,6 +8,7 @@
 
 char *param[5];
 char *func;
+char allParam[256];
 
 void getCommand(){
 	char input[256];
@@ -16,6 +17,7 @@ void getCommand(){
 	strcat(cwd,": ");
 	printf("%s", cwd);
 	scanf(" %[^\n]s", input);
+	strcpy(allParam, input);
 	char *token = strtok(input, " ");
 	
 	
@@ -41,6 +43,14 @@ void clearStdin()
             break;
         }
     }
+}
+
+void removeChar(char temp[], int start, int fin){
+	char new[256];
+	for (int i = start; i < fin; i++){
+		new[i-start]=temp[i];
+	}
+	printf("\n%s\n", new);
 }
 
 int listDir(){
@@ -96,6 +106,10 @@ int main(int argc, char *argv[]){
 		if(strcmp(func,"pause")==0){
 			fflush(stdin);
 			pauseShell();
+		}
+		if(strcmp(func, "echo")==0){
+			removeChar(allParam, 5, strlen(allParam));
+			
 		}
 	getCommand();
 	}
