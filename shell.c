@@ -47,8 +47,12 @@ int listDir(){
 	DIR *folder;
 	struct dirent *entry;
 	int files=0;
-
-	folder = opendir(param[0]);
+	if(param[0]==NULL){
+		folder=opendir(".");
+	}
+	else{
+		folder = opendir(param[0]);
+	}
 	if(folder==NULL){
 		puts("Unable to read directory!");
 		return(1);
