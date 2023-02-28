@@ -150,8 +150,14 @@ int main(int argc, char *argv[]){
             		}
         	}
 		if (strcmp(func, "help") == 0) {
-            		char *args[] = {"more", "README.md", NULL};
-            		execvp(args[0], args);
+			pid_t pid = fork();//Create a fork
+			if(pid == 0){//If child process
+				char *args[] = {"more", "README.md", NULL};
+            			execvp(args[0], args);	
+			}
+			else{
+				waitpid(pid, &status, 0);// wait for child
+			}
 		}
 		else{//if the input is not recognized, search for a file by the name
 			if (searchForFile(func)){
