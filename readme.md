@@ -1,3 +1,9 @@
+Tal Marianovski [100700316]
+Thomas Menegotti [100750648]
+Liam Rea [100743012]
+Hishan Sayanthan [100786649]
+
+
 Manual:
 This project consists of a command line interface that allows interaction between the user and the operating system, also known as a simple unix shell. 
 This shell provides basic commands for navigation, running programs, and file manipulation. 
