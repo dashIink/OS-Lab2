@@ -152,7 +152,7 @@ int main(int argc, char *argv[]){
 		if (strcmp(func, "help") == 0) {
 			pid_t pid = fork();//Create a fork
 			if(pid == 0){//If child process
-				char *args[] = {"more", "README.md", NULL};
+				char *args[] = {"more", "readme.md", NULL};
             			execvp(args[0], args);	
 			}
 			else{
