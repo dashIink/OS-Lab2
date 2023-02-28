@@ -1,2 +1,2 @@
 shell:
-	gcc shell.c -o shell -I
+	gcc shell.c -o shell
